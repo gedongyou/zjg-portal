@@ -1045,7 +1045,7 @@ function pgHome(){
   const newsLi2 = rightArr.map(n=>`
     <li><div class="date"><b>${n.date}</b><span>${n.year}</span></div>
       <a class="txt" href="#/news/${n.id}">${n.title}<i>${n.dept}</i></a></li>`).join('');
-  const notices = NEWS.slice().sort((a,b)=>(b.hot?1:0)-(a.hot?1:0)).slice(0,4);
+  const notices = NEWS.slice().sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,4);
 
   return header('home') + `
   <section class="hero">
@@ -1058,7 +1058,7 @@ function pgHome(){
         <div class="hero-btns"><a class="btn gold" href="#/zs">进入招生专题 →</a></div>
       </div>
       <aside class="hero-side">
-        <div class="t">校园公告 <span>NOTICE</span></div>
+        <div class="t">本周要闻 <span>TOP NEWS</span></div>
         <ul>${notices.map(n=>`<li><a href="#/news/${n.id}"><b>[${n.date}]</b> ${n.title.length>26?n.title.slice(0,26)+'…':n.title}</a></li>`).join('')}</ul>
       </aside>
     </div>
