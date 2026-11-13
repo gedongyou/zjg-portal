@@ -1024,18 +1024,21 @@ function sideNav(title, groups, active, page, tip){
 
 function pgHome(){
   const cats = catList();
-  const pick = (cats, n) => {
-    const hit = NEWS.filter(x=>cats.includes(x.cat));
-    return (hit.length ? hit : NEWS).slice(0,n);
+  const used = new Set();
+  const take = (group, n) => {
+    const out = [];
+    const add = (list) => list.forEach(x => { if (out.length < n && !used.has(x.id)) { used.add(x.id); out.push(x); } });
+    add(NEWS.filter(x => group.includes(x.cat)));
+    add(NEWS);
+    return out;
   };
-  const leftArr = pick([cats[0] || '校园新闻'],5);
-  const used = new Set(leftArr.map(x=>x.id));
-  const rightArr = pick([cats[1] || '系部风采'],5).filter(x=>!used.has(x.id));
-  NEWS.forEach(x=>{
-    if(rightArr.length<5 && !used.has(x.id) && !rightArr.some(y=>y.id===x.id)) rightArr.push(x);
-  });
-  const tabRow = (from, to) => {
-    const g = cats.slice(from, to);
+  const head = cats.find(c => c.indexOf('新闻') >= 0);
+  const rest = cats.filter(c => c !== head);
+  const g1 = [head || rest[0], rest[0]].filter((c, i, arr) => c && arr.indexOf(c) === i).slice(0, 2);
+  const g2 = rest.slice(head ? 0 : 1).filter(c => g1.indexOf(c) < 0).slice(0, 2);
+  const leftArr = take(g1, 5);
+  const rightArr = take(g2, 5);
+  const tabRow = (g) => {
     if(!g.length) return '';
     return `<div class="tabs">${g.map((c,i)=>`<a class="tab ${i===0?'on':''}" href="#/news/${encodeURIComponent(c)}">${c}</a>`).join('')}</div>`;
   };
@@ -1078,11 +1081,11 @@ function pgHome(){
         <div class="card-hd"><div class="ttl">新闻中心</div><a class="more" href="#/news">更多 +</a></div>
         <div class="news">
           <div class="col">
-            ${tabRow(0,2)}
+            ${tabRow(g1)}
             <ul class="newslist">${newsLi}</ul>
           </div>
           <div class="col">
-            ${tabRow(2,4)}
+            ${tabRow(g2)}
             <ul class="newslist">${newsLi2}</ul>
           </div>
         </div>
