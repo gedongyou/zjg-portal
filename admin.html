@@ -18,7 +18,6 @@
   a{text-decoration:none;color:inherit;cursor:pointer;}
   button{font-family:inherit;}
 
-  /* ================= 登录 ================= */
   .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;
     background:radial-gradient(ellipse at 70% 20%,#1b6fa8,#0a2f58 55%,#071d33);position:relative;overflow:hidden;}
   .login-wrap::before{content:"";position:absolute;inset:0;opacity:.16;
@@ -61,7 +60,6 @@
   .login-hint b{color:var(--blue);}
   .login-foot{text-align:center;font-size:11.5px;color:#7f8fa0;margin-top:18px;}
 
-  /* ================= 框架 ================= */
   .layout{display:grid;grid-template-columns:222px 1fr;height:100vh;overflow:hidden;}
   aside{background:linear-gradient(180deg,#0e2c4c,#0a2138);color:#a9bfd6;display:flex;flex-direction:column;
     height:100vh;overflow:hidden;border-right:1px solid rgba(0,0,0,.18);}
@@ -234,7 +232,6 @@
   .scard .tag.on{background:#eaf6ef;color:var(--green);}
   .scard .tag.off{background:#f0f2f5;color:var(--ink3);}
 
-  /* 表单 */
   .formgrid{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start;}
   .cardbox{background:#fff;border:1px solid var(--line);border-radius:4px;padding:22px 24px;}
   .fg{margin-bottom:18px;}
@@ -260,7 +257,6 @@
   .ti-thumb.ph{display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#b3c0cd;
     border-style:dashed;border-color:#dbe4ee;flex:0 0 54px;}
 
-  /* 素材库 */
   .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(182px,1fr));gap:14px;padding:18px 20px;}
   .mcard{border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fff;transition:.18s;}
   .mcard:hover{box-shadow:0 6px 18px rgba(18,48,78,.10);}
@@ -281,7 +277,6 @@
   .meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink3);padding:7px 0;border-bottom:1px dotted #eef2f6;}
   .meta-row:last-child{border-bottom:0;}
 
-  /* 留言 */
   .msg{background:#fff;border:1px solid var(--line);border-radius:4px;padding:16px 18px;margin-bottom:12px;display:flex;gap:14px;}
   .msg .av{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#eef4fa;color:var(--blue);
     display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
@@ -308,7 +303,7 @@
 const app = document.getElementById('app');
 let SESSION = false;
 try { SESSION = sessionStorage.getItem('zjg_login') === '1'; } catch(e){}
-/* 演示直达：admin.html?autologin=1 免登录进入后台，便于截图与讲解 */
+
 if (/[?&]autologin=1/.test(location.search)) SESSION = true;
 
 function toast(msg){
@@ -318,7 +313,6 @@ function toast(msg){
 }
 function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-/* ================= 登录页 ================= */
 function pgLogin(){
   return `
   <div class="login-wrap">
@@ -363,7 +357,6 @@ function doLogin(e){
   }
 }
 
-/* ================= 框架 ================= */
 const MENU = [
   { grp:'内容中心', items:[
     {k:'dash', t:'工作台'}, {k:'news', t:'文章管理'}, {k:'cats', t:'栏目管理'},
@@ -404,7 +397,6 @@ function shell(active, title, sub, body, btns){
   </div>`;
 }
 
-/* ================= 工作台 ================= */
 function pgDash(){
   const st = Store.stats();
   const recent = Store.newsAll().slice(0,5);
@@ -498,7 +490,6 @@ function pgDash(){
     `<a class="btn" href="index.html" target="_blank">查看前台</a><a class="btn pri" href="#/new">＋ 新建文章</a>`);
 }
 
-/* ================= 文章列表 ================= */
 let LIST = { status:'', cat:'', kw:'', page:1, size:8 };
 let SEL = new Set();
 
@@ -613,7 +604,6 @@ function del(id){
   Store.addLog('删除文章', Store.get(id).title); Store.remove(id); toast('已删除'); render();
 }
 
-/* ================= 编辑页 ================= */
 function pgEdit(id){
   const isNew = !id;
   const n = isNew ? {id:'', title:'', cat:'校园新闻', dept:'信息工程系', date:'2026-11-12',
@@ -700,7 +690,6 @@ function pickCover(input){
   if(input) input.value = '';
 }
 
-/* 通用：读取图片 → 等比压缩到宽 1280 → dataURL */
 function compressImage(file, cb){
   if(!file) return;
   if(!/^image\//.test(file.type)){ cb(null, '请选择图片文件（JPG / PNG）'); return; }
@@ -727,7 +716,6 @@ function compressImage(file, cb){
   fr.readAsDataURL(file);
 }
 
-/* 读取本地图片 → 压缩到宽 1280 → dataURL 存入隐藏域（演示版用 localStorage 持久化） */
 function handleCoverFile(file){
   compressImage(file, (data, err)=>{
     if(err){ toast(err); return; }
@@ -774,7 +762,6 @@ function saveArticle(e, id){
   setTimeout(()=>{ location.hash='#/news'; }, 500);
 }
 
-/* ================= 栏目 ================= */
 function pgCats(){
   const cats = Store.cats();
   const groups = [...new Set(cats.map(c=>c.parent))];
@@ -824,7 +811,6 @@ function delCat(id, name){
   Store.removeCat(id); Store.addLog('删除栏目', name); toast('已删除'); render();
 }
 
-/* ================= 留言 ================= */
 function pgMsgs(){
   const msgs = Store.messages();
   const body = msgs.map(m=>`
@@ -842,7 +828,6 @@ function pgMsgs(){
 }
 function replyMsg(id){ Store.replyMsg(id); toast('已标记为已回复'); render(); }
 
-/* ================= 用户 ================= */
 function pgUsers(){
   const body = `<div class="panel"><div class="hd"><div class="t">后台用户<i>${Store.users().length} 个账号</i></div>
     <button class="btn pri" onclick="toast('演示版未开放账号创建')">＋ 新增用户</button></div>
@@ -873,7 +858,6 @@ function pgUsers(){
   return shell('users','用户与角色','管理后台账号、角色与数据权限', body);
 }
 
-/* ================= 日志 ================= */
 function pgLogs(){
   const body = `<div class="panel"><div class="hd"><div class="t">操作日志<i>最近 ${Store.logs().length} 条</i></div>
     <button class="btn" onclick="Store.reset();toast('演示数据已重置');render();">重置演示数据</button></div>
@@ -884,7 +868,6 @@ function pgLogs(){
   return shell('logs','操作日志','记录后台关键操作，便于追溯与安全审计', body);
 }
 
-/* ================= 设置 ================= */
 function pgSettings(){
   const body = `<div class="formgrid">
     <div class="cardbox">
@@ -946,7 +929,6 @@ function importData(input){
   input.value = '';
 }
 
-/* ================= 图片素材库 ================= */
 function pgMedia(){
   const list = Store.media();
   const usage = Store.mediaUsage();
@@ -1020,7 +1002,6 @@ function copyName(name){
   } catch(e){ toast('名称：' + name); }
 }
 
-/* ================= 轮播与公告 ================= */
 function pgSlides(){
   const list = Store.slides();
   const on = list.filter(s => s.on).length;
@@ -1087,7 +1068,6 @@ function previewImgData(data, name){
   document.body.appendChild(d);
 }
 
-/* ================= 占位 ================= */
 function pgTodo(title, sub, active){
   const body = `<div class="panel"><div class="empty">
     「${title}」模块将在正式版实现<br>
@@ -1096,7 +1076,6 @@ function pgTodo(title, sub, active){
   return shell(active, title, sub, body);
 }
 
-/* ================= 路由 ================= */
 function render(){
   const h = location.hash.replace(/^#\/?/,'') || (SESSION?'dash':'login');
   const [k, arg] = h.split('/');

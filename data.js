@@ -1,8 +1,4 @@
-/* ============================================================
-   张家港市中等专业学校 · 门户网站毕业设计 DEMO
-   共享数据层：前台 index.html 与后台 admin.html 共用
-   数据存于 localStorage，首次访问自动写入示例数据
-   ============================================================ */
+
 
 const DEFAULTS = {
   cats: [
@@ -222,7 +218,7 @@ const Store = (function () {
     return db;
   }
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { /* 隐私模式忽略 */ }
+    try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {  }
   }
   function nextId(arr) { return arr.reduce((m, x) => Math.max(m, +x.id || 0), 0) + 1; }
 
@@ -287,7 +283,6 @@ const Store = (function () {
     },
     reset() { db = clone(DEFAULTS); save(); },
 
-    /* ---------- 图片素材库 ---------- */
     media() { return clone(db.media || []); },
     addMedia(name, data, size) {
       db.media = db.media || [];
@@ -303,7 +298,7 @@ const Store = (function () {
         localStorage.setItem(KEY, JSON.stringify(db));
       } catch (e) {
         db.media.shift();
-        return null;   /* 空间不足 */
+        return null;
       }
       return m;
     },
@@ -312,7 +307,7 @@ const Store = (function () {
       save();
     },
     mediaUsage() {
-      /* 统计每张素材被多少篇文章用作封面 */
+
       const map = {};
       db.news.forEach(n => { if (n.cover) map[n.cover] = (map[n.cover] || 0) + 1; });
       return map;
@@ -364,7 +359,6 @@ const Store = (function () {
   };
 })();
 
-/* 状态显示映射 */
 const STATUS_MAP = {
   published: { t: '已发布', cls: 'ok' },
   review: { t: '待审核', cls: 'wait' },
