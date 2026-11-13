@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>张家港市中等专业学校 · 门户后台管理（设计预览 Demo）</title>
+<style>
+  :root{
+    --ink:#1b2733; --ink2:#5b6b7c; --ink3:#8b9aa9;
+    --line:#e6ebf1; --bg:#f3f6fa;
+    --blue:#1a5fa8; --blue-d:#0d3f75; --cyan:#2aa8c4;
+    --gold:#c08a2e; --green:#2f8f5b; --red:#c0453a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:var(--bg);color:var(--ink);
+    font-size:14px;-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;cursor:pointer;}
+  button{font-family:inherit;}
+
+  /* ================= 登录 ================= */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(ellipse at 70% 20%,#1b6fa8,#0a2f58 55%,#071d33);position:relative;overflow:hidden;}
+  .login-wrap::before{content:"";position:absolute;inset:0;opacity:.16;
+    background-image:repeating-linear-gradient(63deg,rgba(255,255,255,.55) 0 1.2px,transparent 1.2px 40px),
+                     repeating-linear-gradient(-63deg,rgba(255,255,255,.35) 0 1.2px,transparent 1.2px 40px);}
+  .login-card{position:relative;width:900px;height:524px;display:grid;grid-template-columns:1fr 400px;
+    background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.4);}
+  .login-left{background:linear-gradient(150deg,#0d3f75,#1a5fa8 60%,#1b6fa8);color:#fff;padding:44px 40px;position:relative;overflow:hidden;}
+  .login-left .deco{position:absolute;right:-60px;bottom:-80px;width:280px;height:280px;border-radius:50%;border:40px solid rgba(255,255,255,.06);}
+  .login-left .lg{display:flex;align-items:center;gap:13px;margin-bottom:38px;}
+  .login-left .lg .m{width:52px;height:52px;flex:0 0 52px;display:block;}
+  .login-left .lg .m img{width:52px;height:52px;display:block;border-radius:50%;
+    filter:drop-shadow(0 4px 14px rgba(0,0,0,.35));}
+  .login-left .lg b{font-size:17px;letter-spacing:1.5px;display:block;}
+  .login-left .lg span{font-size:10.5px;letter-spacing:2px;color:#a8c8e2;}
+  .login-left h2{font-size:29px;line-height:1.5;letter-spacing:3px;font-family:"Source Han Serif SC","SimSun",serif;margin:0 0 16px;}
+  .login-left p{font-size:13px;line-height:2;color:#bdd6ea;margin:0;}
+  .login-left .tags{position:absolute;left:40px;bottom:40px;display:flex;gap:8px;}
+  .login-left .tags span{font-size:11.5px;border:1px solid rgba(255,255,255,.3);border-radius:2px;padding:5px 10px;color:#cfe2f2;}
+
+  .login-right{padding:42px 40px 34px;display:flex;flex-direction:column;}
+  .login-right h3{margin:0 0 6px;font-size:21px;letter-spacing:2px;color:#16283c;}
+  .login-right .sub{font-size:12.5px;color:var(--ink3);margin-bottom:24px;}
+  .fld{margin-bottom:15px;}
+  .fld label{display:block;font-size:12.5px;color:var(--ink2);margin-bottom:7px;letter-spacing:.5px;}
+  .fld input{width:100%;border:1px solid var(--line);border-radius:3px;padding:11px 13px;font-size:14px;
+    outline:none;color:var(--ink);font-family:inherit;background:#fcfdfe;transition:.15s;}
+  .fld input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(26,95,168,.09);}
+  .login-row{display:flex;gap:10px;}
+  .login-row input{flex:1;}
+  .captcha{width:100px;height:42px;flex:0 0 100px;border:1px solid var(--line);border-radius:3px;
+    background:repeating-linear-gradient(45deg,#eef4fa 0 6px,#e3edf7 6px 12px);
+    display:flex;align-items:center;justify-content:center;font-size:17px;letter-spacing:5px;
+    color:#1a5fa8;font-weight:700;font-style:italic;user-select:none;}
+  .btn-login{width:100%;background:var(--blue);color:#fff;border:0;border-radius:3px;padding:12px;
+    font-size:15px;letter-spacing:4px;cursor:pointer;margin-top:8px;transition:.18s;}
+  .btn-login:hover{background:#15508f;}
+  .login-hint{margin-top:16px;font-size:12px;color:var(--ink3);line-height:1.8;background:#f7fafd;
+    border:1px dashed #dbe6f0;border-radius:3px;padding:10px 12px;}
+  .login-hint b{color:var(--blue);}
+  .login-foot{text-align:center;font-size:11.5px;color:#7f8fa0;margin-top:18px;}
+
+  /* ================= 框架 ================= */
+  .layout{display:grid;grid-template-columns:222px 1fr;min-height:100vh;}
+  aside{background:linear-gradient(180deg,#0e2c4c,#0a2138);color:#a9bfd6;display:flex;flex-direction:column;}
+  aside .brand{display:flex;align-items:center;gap:11px;padding:19px 18px;border-bottom:1px solid rgba(255,255,255,.07);}
+  aside .brand .m{width:36px;height:36px;flex:0 0 36px;}
+  aside .brand .m img{width:36px;height:36px;display:block;border-radius:50%;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,.35));}
+  aside .brand .n b{display:block;color:#fff;font-size:14px;letter-spacing:.5px;}
+  aside .brand .n span{font-size:10.5px;color:#6d8aa6;letter-spacing:1px;}
+  aside .grp{padding:16px 20px 8px;font-size:10.5px;color:#5c7791;letter-spacing:2px;}
+  aside nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;position:relative;}
+  aside nav a .dot{width:5px;height:5px;border-radius:50%;background:#33506e;flex:0 0 5px;}
+  aside nav a:hover{background:rgba(255,255,255,.045);color:#dbe9f7;}
+  aside nav a.on{background:linear-gradient(90deg,rgba(42,168,196,.22),rgba(42,168,196,0));color:#fff;font-weight:600;}
+  aside nav a.on::before{content:"";position:absolute;left:0;top:9px;bottom:9px;width:3px;background:var(--cyan);}
+  aside nav a.on .dot{background:var(--cyan);}
+  aside nav a .cnt{margin-left:auto;background:var(--red);color:#fff;font-size:10px;border-radius:8px;padding:1px 6px;}
+  aside .vers{margin-top:auto;padding:14px 20px;font-size:11px;color:#4f6b85;border-top:1px solid rgba(255,255,255,.06);}
+  aside .vers a{color:#7fa0bf;display:block;margin-top:6px;}
+  aside .vers a:hover{color:#fff;}
+
+  .main{display:flex;flex-direction:column;min-width:0;}
+  .topbar{display:none;}
+  .crumb{font-size:13px;color:var(--ink3);}
+  .crumb b{color:var(--ink);font-weight:600;}
+  .crumb i{font-style:normal;margin:0 7px;color:#c6d0da;}
+  .topbar .sp{margin-left:auto;}
+  .ts{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:16px;padding:6px 13px;
+    color:var(--ink3);font-size:12.5px;background:#fafbfd;}
+  .bell{width:32px;height:32px;border-radius:50%;background:#f4f7fa;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--ink2);font-size:13px;position:relative;}
+  .bell b{position:absolute;top:-2px;right:-2px;background:var(--red);color:#fff;font-size:9px;border-radius:8px;padding:1px 4px;font-weight:400;}
+  .user{display:flex;align-items:center;gap:9px;cursor:pointer;}
+  .user .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(145deg,#4f97d5,#1a5fa8);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+  .user .nm{font-size:13px;line-height:1.3;}
+  .user .nm span{display:block;font-size:11px;color:var(--ink3);}
+
+  .content{padding:30px 22px 40px;overflow:auto;}
+  .page-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;gap:16px;}
+  .page-hd h1{margin:0;font-size:20px;letter-spacing:1px;color:var(--ink);font-weight:700;}
+  .page-hd .sub{font-size:12.5px;color:var(--ink3);margin-top:6px;}
+  .page-hd .btns{display:flex;gap:9px;}
+  .btn{font-size:13px;padding:8px 16px;border-radius:3px;background:#fff;border:1px solid var(--line);
+    color:var(--ink2);white-space:nowrap;cursor:pointer;display:inline-block;}
+  .btn:hover{border-color:#cfdae6;color:var(--ink);}
+  .btn.pri{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(26,95,168,.25);}
+  .btn.pri:hover{background:#15508f;color:#fff;}
+  .btn.danger{color:var(--red);border-color:#f0d7d4;}
+  .btn.danger:hover{background:#fdf3f2;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:4px;padding:16px 18px;position:relative;overflow:hidden;}
+  .kpi::after{content:"";position:absolute;right:-24px;top:-24px;width:74px;height:74px;border-radius:50%;background:rgba(26,95,168,.05);}
+  .kpi .lb{font-size:12.5px;color:var(--ink3);letter-spacing:.5px;}
+  .kpi .vl{font-size:27px;font-weight:700;margin-top:8px;letter-spacing:.5px;font-family:"DIN","Arial Narrow",sans-serif;}
+  .kpi .vl small{font-size:12px;font-weight:400;color:var(--ink3);margin-left:4px;letter-spacing:0;}
+  .kpi .df{font-size:11.5px;margin-top:7px;color:var(--ink3);}
+  .kpi .df em{font-style:normal;color:var(--green);}
+  .kpi.c1{border-top:3px solid var(--blue);}.kpi.c2{border-top:3px solid var(--gold);}
+  .kpi.c3{border-top:3px solid var(--cyan);}.kpi.c4{border-top:3px solid var(--green);}
+
+  .row{display:grid;gap:14px;margin-top:14px;}
+  .row.a{grid-template-columns:1.55fr 1fr;}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:4px;}
+  .panel .hd{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:48px;border-bottom:1px solid var(--line);}
+  .panel .hd .t{font-size:14.5px;font-weight:700;color:var(--ink);letter-spacing:.6px;}
+  .panel .hd .t i{font-style:normal;font-size:11.5px;color:var(--ink3);font-weight:400;margin-left:8px;letter-spacing:0;}
+  .seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;}
+  .seg span{font-size:12px;padding:5px 11px;color:var(--ink3);background:#fff;cursor:pointer;}
+  .seg span.on{background:#eef5fc;color:var(--blue);font-weight:600;}
+  .panel .bd{padding:16px 18px 18px;}
+
+  .chart{position:relative;height:196px;}
+  .chart svg{width:100%;height:100%;display:block;}
+  .lgd{display:flex;gap:16px;font-size:11.5px;color:var(--ink3);margin-top:8px;}
+  .lgd span{display:flex;align-items:center;gap:5px;}
+  .lgd i{width:9px;height:9px;border-radius:2px;display:block;}
+
+  .rank{list-style:none;margin:0;padding:0;}
+  .rank li{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px dashed #eef2f6;font-size:13px;}
+  .rank li:last-child{border-bottom:0;}
+  .rank .n{width:19px;height:19px;border-radius:3px;background:#f0f4f9;color:var(--ink3);font-size:11px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 19px;}
+  .rank li:nth-child(1) .n{background:var(--red);color:#fff;}
+  .rank li:nth-child(2) .n{background:var(--gold);color:#fff;}
+  .rank li:nth-child(3) .n{background:var(--blue);color:#fff;}
+  .rank .tx{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2);}
+  .rank .vv{color:var(--ink3);font-size:12px;font-family:"DIN",sans-serif;}
+
+  .todo{list-style:none;margin:0;padding:0;}
+  .todo li{border-bottom:1px dashed #eef2f6;}
+  .todo li:last-child{border-bottom:0;}
+  .todo a{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:13px;color:var(--ink2);}
+  .todo a:hover{color:var(--blue);}
+  .todo .k{flex:1;}
+  .todo b{font-size:16px;color:var(--ink);font-family:"DIN",sans-serif;}
+  .todo em{font-style:normal;font-size:12px;color:#b3c0cd;}
+  .todo a:hover em{color:var(--blue);}
+  .quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+  .quick a{display:block;text-align:center;font-size:12.5px;color:var(--ink2);border:1px solid var(--line);
+    border-radius:3px;padding:9px 6px;background:#fbfcfe;}
+  .quick a:hover{border-color:var(--blue);color:var(--blue);background:#f4f9ff;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{text-align:left;font-weight:600;color:var(--ink2);font-size:12.5px;padding:11px 12px;
+    background:#f8fafc;border-bottom:1px solid var(--line);letter-spacing:.4px;white-space:nowrap;}
+  tbody td{padding:12px;border-bottom:1px solid #f1f4f8;color:var(--ink2);vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr:hover{background:#fafcff;}
+  tbody td .ti{color:var(--ink);font-weight:500;display:block;line-height:1.5;}
+  tbody td .ti:hover{color:var(--blue);}
+  .st{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:2px 9px;border-radius:11px;white-space:nowrap;}
+  .st::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;display:block;}
+  .st.ok{background:#eaf6ef;color:var(--green);}
+  .st.wait{background:#fdf3e4;color:#b07b1f;}
+  .st.draft{background:#f0f2f5;color:var(--ink3);}
+  .st.top{background:#fdeceb;color:var(--red);}
+  .ops a{color:var(--blue);margin-right:10px;font-size:12.5px;white-space:nowrap;}
+  .ops a.del{color:var(--ink3);}
+  .ops a:hover{text-decoration:underline;}
+  .pgx{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink3);}
+  .pgx .pgs{display:flex;gap:5px;}
+  .pgx .pgs a{width:26px;height:26px;border:1px solid var(--line);border-radius:3px;display:flex;
+    align-items:center;justify-content:center;background:#fff;font-size:12.5px;padding:0 8px;}
+  .pgx .pgs a.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .filters{display:flex;gap:9px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .filters select,.filters input{font-size:12.5px;color:var(--ink2);border:1px solid var(--line);
+    border-radius:3px;padding:7px 11px;background:#fff;font-family:inherit;outline:none;}
+  .filters input{width:220px;color:var(--ink);}
+  .filters .sp{margin-left:auto;}
+
+  .bulk{display:none;align-items:center;gap:12px;padding:11px 18px;background:#f2f7fd;
+    border-bottom:1px solid #dce8f5;font-size:12.5px;color:var(--ink2);}
+  .bulk.on{display:flex;}
+  .bulk b{color:var(--blue);}
+  .bulk button{font-family:inherit;font-size:12.5px;border:1px solid #cfdded;background:#fff;color:var(--ink2);
+    border-radius:3px;padding:6px 12px;cursor:pointer;}
+  .bulk button:hover{border-color:var(--blue);color:var(--blue);}
+  .bulk button.del{color:var(--red);border-color:#f0cfcc;}
+  .bulk button.del:hover{background:var(--red);border-color:var(--red);color:#fff;}
+  .bulk a{margin-left:auto;color:var(--ink3);cursor:pointer;}
+  .bulk a:hover{color:var(--blue);}
+  table input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:var(--blue);}
+  tr.sel td{background:#f7fbff;}
+
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px;padding:18px;}
+  .scard{border:1px solid var(--line);border-radius:4px;overflow:hidden;background:#fff;}
+  .scard .im{height:132px;background:#eef2f6 center/cover no-repeat;}
+  .scard .tx{padding:10px 12px 12px;}
+  .scard .tx b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:7px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .scard .tx .ops{display:flex;gap:10px;font-size:12px;}
+  .scard.off .im{filter:grayscale(1);opacity:.5;}
+  .scard .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:9px;margin-left:6px;}
+  .scard .tag.on{background:#eaf6ef;color:var(--green);}
+  .scard .tag.off{background:#f0f2f5;color:var(--ink3);}
+
+  /* 表单 */
+  .formgrid{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start;}
+  .cardbox{background:#fff;border:1px solid var(--line);border-radius:4px;padding:22px 24px;}
+  .fg{margin-bottom:18px;}
+  .fg label{display:block;font-size:13px;color:var(--ink2);margin-bottom:8px;font-weight:600;}
+  .fg label i{color:var(--red);font-style:normal;margin-left:2px;}
+  .fg input[type=text],.fg select,.fg textarea{width:100%;border:1px solid var(--line);border-radius:3px;
+    padding:10px 12px;font-size:14px;font-family:inherit;color:var(--ink);outline:none;background:#fcfdfe;}
+  .fg input[type=text]:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue);background:#fff;}
+  .fg textarea{min-height:110px;line-height:1.9;resize:vertical;}
+  .fg .hint{font-size:11.5px;color:var(--ink3);margin-top:6px;}
+  .upload{border:1px dashed #cfdae6;border-radius:3px;background:#fafcfe;min-height:132px;padding:16px 12px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;color:#93a6b8;font-size:12.5px;
+    cursor:pointer;gap:6px;text-align:center;line-height:1.6;box-sizing:border-box;}
+  .upload:hover{border-color:var(--blue);color:var(--blue);background:#f7fbff;}
+  .upload.on{border-color:var(--blue);background:#eef6ff;color:var(--blue);}
+  .up-preview{position:relative;border:1px solid var(--line);border-radius:3px;overflow:hidden;margin-bottom:10px;background:#f6f8fa;}
+  .up-preview img{display:block;width:100%;height:126px;object-fit:cover;}
+  .up-del{position:absolute;right:6px;top:6px;width:24px;height:24px;border-radius:50%;border:0;
+    background:rgba(12,32,56,.72);color:#fff;font-size:15px;line-height:1;cursor:pointer;}
+  .up-del:hover{background:var(--seal);}
+  .ti-cell{display:flex;align-items:center;gap:10px;}
+  .ti-thumb{width:54px;height:34px;flex:0 0 54px;object-fit:cover;border-radius:2px;border:1px solid var(--line);background:#f3f6fa;}
+  .ti-thumb.ph{display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#b3c0cd;
+    border-style:dashed;border-color:#dbe4ee;flex:0 0 54px;}
+
+  /* 素材库 */
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(182px,1fr));gap:14px;padding:18px 20px;}
+  .mcard{border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fff;transition:.18s;}
+  .mcard:hover{box-shadow:0 6px 18px rgba(18,48,78,.10);}
+  .mcard img{display:block;width:100%;height:112px;object-fit:cover;background:#eef3f8;cursor:zoom-in;}
+  .mcard .meta{padding:8px 10px 6px;font-size:11.5px;color:#93a6b8;line-height:1.5;}
+  .mcard .meta b{display:block;color:var(--ink2);font-weight:500;font-size:12.5px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mcard .mops{display:flex;justify-content:space-between;padding:0 10px 9px;font-size:12px;}
+  .mcard .mops a{color:var(--blue);cursor:pointer;}
+  .mcard .mops a.del{color:#c0392b;}
+  .lbox{position:fixed;inset:0;background:rgba(6,18,30,.84);display:flex;align-items:center;
+    justify-content:center;z-index:9999;padding:40px;cursor:zoom-out;}
+  .lbox img{max-width:90vw;max-height:86vh;border-radius:4px;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+  .radios{display:flex;gap:16px;font-size:13.5px;color:var(--ink2);}
+  .radios label{display:flex;align-items:center;gap:6px;font-weight:400;margin:0;cursor:pointer;}
+  .side-card{background:#fff;border:1px solid var(--line);border-radius:4px;padding:18px 20px;margin-bottom:14px;}
+  .side-card h4{margin:0 0 12px;font-size:13.5px;color:var(--ink);letter-spacing:.5px;}
+  .meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink3);padding:7px 0;border-bottom:1px dotted #eef2f6;}
+  .meta-row:last-child{border-bottom:0;}
+
+  /* 留言 */
+  .msg{background:#fff;border:1px solid var(--line);border-radius:4px;padding:16px 18px;margin-bottom:12px;display:flex;gap:14px;}
+  .msg .av{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#eef4fa;color:var(--blue);
+    display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
+  .msg .bd{flex:1;}
+  .msg .hd{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+  .msg .hd b{font-size:13.5px;}
+  .msg .hd span{font-size:11.5px;color:var(--ink3);}
+  .msg .tx{font-size:13px;color:#4a5b6d;line-height:1.8;}
+  .msg .rp{margin-top:10px;background:#f7fafd;border-left:3px solid var(--blue);padding:9px 12px;font-size:12.5px;color:#5b6b7c;line-height:1.8;}
+
+  .toast{position:fixed;left:50%;top:26px;transform:translate(-50%,-24px);background:#12304f;color:#fff;
+    padding:11px 22px;border-radius:4px;font-size:13.5px;opacity:0;transition:.28s;z-index:999;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);pointer-events:none;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  .empty{padding:60px 20px;text-align:center;color:var(--ink3);font-size:13px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+const app = document.getElementById('app');
+let SESSION = false;
+try { SESSION = sessionStorage.getItem('zjg_login') === '1'; } catch(e){}
+/* 演示直达：admin.html?autologin=1 免登录进入后台，便于截图与讲解 */
+if (/[?&]autologin=1/.test(location.search)) SESSION = true;
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 1900);
+}
+function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ================= 登录页 ================= */
+function pgLogin(){
+  return `
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-left">
+        <div class="deco"></div>
+        <div class="lg"><div class="m"><img src="images/emblem.png" alt="校徽"></div>
+          <div><b>张家港市中等专业学校</b><span>PORTAL CMS · 后台管理</span></div></div>
+        <h2>门户内容<br>管理平台</h2>
+        <p>统一管理校园新闻、公告通知、<br>系部动态与招生信息，<br>发布即同步至门户前台。</p>
+        <div class="tags"><span>内容发布</span><span>栏目管理</span><span>访问统计</span><span>权限控制</span></div>
+      </div>
+      <div class="login-right">
+        <h3>账号登录</h3>
+        <div class="sub">请输入管理员账号与密码</div>
+        <form onsubmit="doLogin(event)">
+          <div class="fld"><label>账号</label><input id="acct" type="text" value="admin" autocomplete="off"></div>
+          <div class="fld"><label>密码</label><input id="pwd" type="password" value="123456"></div>
+          <div class="fld"><label>验证码</label>
+            <div class="login-row"><input id="cap" type="text" placeholder="请输入右侧字符">
+              <div class="captcha">7K3M</div></div>
+          </div>
+          <button class="btn-login" type="submit">登 录</button>
+        </form>
+        <div class="login-hint">演示账号：<b>admin</b>　密码：<b>123456</b>　验证码随意填<br>本页为毕业设计演示，非真实系统。</div>
+        <div class="login-foot"><a href="index.html" style="color:#1a5fa8;">← 返回门户前台</a></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function doLogin(e){
+  e.preventDefault();
+  const a = document.getElementById('acct').value.trim();
+  const p = document.getElementById('pwd').value.trim();
+  if(a === 'admin' && p === '123456'){
+    SESSION = true;
+    try { sessionStorage.setItem('zjg_login','1'); } catch(err){}
+    location.hash = '#/dash';
+  } else {
+    toast('账号或密码错误（演示账号 admin / 123456）');
+  }
+}
+
+/* ================= 框架 ================= */
+const MENU = [
+  { grp:'内容中心', items:[
+    {k:'dash', t:'工作台'}, {k:'news', t:'文章管理'}, {k:'cats', t:'栏目管理'},
+    {k:'msgs', t:'留言管理', badge:true}, {k:'media', t:'图片素材库'}, {k:'slides', t:'轮播与公告'}
+  ]},
+  { grp:'系统', items:[
+    {k:'users', t:'用户与角色'}, {k:'logs', t:'操作日志'}, {k:'settings', t:'系统设置'}
+  ]}
+];
+
+function shell(active, title, sub, body, btns){
+  const st = Store.stats();
+  return `
+  <div class="layout">
+    <aside>
+      <div class="brand"><div class="m"><img src="images/emblem.png" alt="校徽"></div>
+        <div class="n"><b>门户网站管理</b><span>ZHANGZHONG CMS</span></div></div>
+      ${MENU.map(g=>`<div class="grp">${g.grp}</div><nav>
+        ${g.items.map(it=>`<a class="${it.k===active?'on':''}" href="#/${it.k}">
+          <span class="dot"></span>${it.t}
+          ${it.badge && st.unread ? `<span class="cnt">${st.unread}</span>` : ''}
+        </a>`).join('')}
+      </nav>`).join('')}
+      <div class="vers">v1.0 · 毕业设计演示版
+        <a href="index.html" target="_blank">↗ 打开门户前台</a>
+        <a href="#/logout">退出登录</a>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="content">
+        <div class="page-hd">
+          <div><h1>${title}</h1><div class="sub">${sub}</div></div>
+          <div class="btns">${btns||''}</div>
+        </div>
+        ${body}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ================= 工作台 ================= */
+function pgDash(){
+  const st = Store.stats();
+  const recent = Store.newsAll().slice(0,5);
+  const body = `
+  <div class="kpis">
+    <div class="kpi c1"><div class="lb">文章总数</div><div class="vl">${st.total}<small>篇</small></div>
+      <div class="df">已发布 ${st.published} 篇 · 草稿 ${st.draft} 篇</div></div>
+    <div class="kpi c2"><div class="lb">待审核</div><div class="vl">${st.review}<small>篇</small></div>
+      <div class="df">需尽快处理，避免影响时效</div></div>
+    <div class="kpi c3"><div class="lb">累计浏览量</div><div class="vl">${st.views.toLocaleString()}<small>PV</small></div>
+      <div class="df">平均每篇 <em>${Math.round(st.views / Math.max(1, st.total))}</em> PV · 共 ${st.total} 篇</div></div>
+    <div class="kpi c4"><div class="lb">未读留言</div><div class="vl">${st.unread}<small>条</small></div>
+      <div class="df">${st.unread} 条待回复，尽量当日处理</div></div>
+  </div>
+
+  <div class="row a">
+    <div class="panel">
+      <div class="hd"><div class="t">近 7 日访问趋势<i>PV / UV</i></div>
+        <div class="seg"><span class="on">7 天</span><span>30 天</span><span>季度</span></div></div>
+      <div class="bd">
+        <div class="chart"><svg viewBox="0 0 620 196" preserveAspectRatio="none">
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a5fa8" stop-opacity=".22"/>
+            <stop offset="100%" stop-color="#1a5fa8" stop-opacity="0"/></linearGradient></defs>
+          <g stroke="#eef2f6" stroke-width="1">
+            <line x1="0" y1="20" x2="620" y2="20"/><line x1="0" y1="62" x2="620" y2="62"/>
+            <line x1="0" y1="104" x2="620" y2="104"/><line x1="0" y1="146" x2="620" y2="146"/>
+            <line x1="0" y1="188" x2="620" y2="188"/></g>
+          <path d="M0,120 L103,96 L206,132 L309,72 L412,88 L515,48 L620,38 L620,188 L0,188 Z" fill="url(#g1)"/>
+          <polyline points="0,120 103,96 206,132 309,72 412,88 515,48 620,38" fill="none" stroke="#1a5fa8" stroke-width="2.4" stroke-linejoin="round"/>
+          <polyline points="0,158 103,146 206,166 309,124 412,138 515,110 620,100" fill="none" stroke="#2aa8c4" stroke-width="2" stroke-dasharray="5 4"/>
+          <g fill="#fff" stroke="#1a5fa8" stroke-width="2">
+            <circle cx="0" cy="120" r="3.2"/><circle cx="103" cy="96" r="3.2"/><circle cx="206" cy="132" r="3.2"/>
+            <circle cx="309" cy="72" r="3.2"/><circle cx="412" cy="88" r="3.2"/><circle cx="515" cy="48" r="3.2"/>
+            <circle cx="620" cy="38" r="3.6"/></g>
+        </svg></div>
+        <div class="lgd"><span><i style="background:#1a5fa8;"></i>浏览量 PV</span>
+          <span><i style="background:#2aa8c4;"></i>访客数 UV</span>
+          <span style="margin-left:auto;">最高 11-12：PV 1,284 / UV 412</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="hd"><div class="t">栏目发文占比</div><a href="#/cats" style="font-size:12px;color:var(--ink3);">详情</a></div>
+      <div class="bd">
+        <ul class="rank">${Store.cats().slice(0,6).map((c,i)=>{
+          const n = Store.newsAll().filter(x=>x.cat===c.name).length;
+          return `<li><span class="n">${i+1}</span><span class="tx">${c.parent} / ${c.name}</span><span class="vv">${n} 篇</span></li>`;
+        }).join('')}</ul>
+        <div style="margin-top:14px;padding-top:13px;border-top:1px dashed #eef2f6;font-size:12px;color:var(--ink3);line-height:1.9;">
+          共 <b style="color:var(--ink);">${new Set(Store.cats().map(c=>c.parent)).size} 个一级栏目</b>、
+          <b style="color:var(--ink);">${Store.cats().length} 个二级栏目</b><br>
+          最近更新：${(Store.newsAll()[0]||{}).date || '—'}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row a"><div class="panel">
+    <div class="hd"><div class="t">最近更新<i>最新 5 条</i></div><a href="#/news" style="font-size:12px;color:var(--ink3);">全部文章 →</a></div>
+
+    <table><thead><tr><th>标题</th><th style="width:120px;">栏目</th><th style="width:90px;">状态</th>
+      <th style="width:90px;">浏览</th><th style="width:120px;">日期</th></tr></thead>
+      <tbody>${recent.map(n=>`<tr>
+        <td><a class="ti" href="#/edit/${n.id}">${esc(n.title)}</a></td>
+        <td>${n.cat}</td>
+        <td><span class="st ${STATUS_MAP[n.status].cls}">${STATUS_MAP[n.status].t}</span></td>
+        <td>${n.views||0}</td><td>${n.date}</td></tr>`).join('')}</tbody></table>
+  </div>
+  <div class="panel">
+    <div class="hd"><div class="t">待办与快捷</div><a href="#/news" style="font-size:12px;color:var(--ink3);">全部文章 →</a></div>
+    <div class="bd">
+      <ul class="todo">
+        <li><a href="#/news" onclick="setF('status','review')"><span class="k">待审核文章</span><b>${st.review}</b><em>处理 →</em></a></li>
+        <li><a href="#/news" onclick="setF('status','draft')"><span class="k">草稿未发布</span><b>${st.draft}</b><em>继续写 →</em></a></li>
+        <li><a href="#/msgs"><span class="k">未读留言</span><b>${st.unread}</b><em>回复 →</em></a></li>
+        <li><a href="#/news"><span class="k">缺封面图</span><b>${Store.newsAll().filter(n=>!n.cover).length}</b><em>补图 →</em></a></li>
+        <li><a href="#/slides"><span class="k">启用中轮播</span><b>${Store.slides().filter(s=>s.on).length}</b><em>管理 →</em></a></li>
+      </ul>
+      <div class="quick">
+        <a href="#/new">＋ 新建文章</a>
+        <a href="#/slides">上传轮播图</a>
+        <a href="#/media">图片素材库</a>
+        <a href="#/settings">导出备份</a>
+      </div>
+    </div>
+  </div></div>`;
+
+  return shell('dash','工作台',
+    `欢迎回来，今天是 2026 年 11 月 12 日　·　您有 ${Store.stats().review} 篇文章待审核`,
+    body,
+    `<a class="btn" href="index.html" target="_blank">查看前台</a><a class="btn pri" href="#/new">＋ 新建文章</a>`);
+}
+
+/* ================= 文章列表 ================= */
+let LIST = { status:'', cat:'', kw:'', page:1, size:8 };
+let SEL = new Set();
+
+function filterNews(){
+  let arr = Store.newsAll();
+  if(LIST.status) arr = arr.filter(n=>n.status===LIST.status);
+  if(LIST.cat) arr = arr.filter(n=>n.cat===LIST.cat);
+  if(LIST.kw) arr = arr.filter(n=>(n.title+n.desc).includes(LIST.kw));
+  return arr.sort((a,b)=> (a.date<b.date?1:-1));
+}
+
+function pgNews(){
+  const arr = filterNews();
+  const total = arr.length;
+  const pages = Math.max(1, Math.ceil(total/LIST.size));
+  if(LIST.page > pages) LIST.page = pages;
+  const rows = arr.slice((LIST.page-1)*LIST.size, LIST.page*LIST.size);
+
+  const body = `
+  <div class="panel">
+    <div class="hd"><div class="t">文章列表<i>共 ${total} 篇</i></div>
+      <div class="seg">
+        ${[['','全部'],['published','已发布'],['review','待审核'],['draft','草稿']].map(([v,t])=>
+          `<span class="${LIST.status===v?'on':''}" onclick="setF('status','${v}')">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div class="filters">
+      <select onchange="setF('cat',this.value)">
+        <option value="">全部栏目</option>
+        ${Store.cats().map(c=>`<option ${LIST.cat===c.name?'selected':''}>${c.name}</option>`).join('')}
+      </select>
+      <input placeholder="输入标题关键词后回车搜索…" value="${esc(LIST.kw)}"
+             onkeydown="if(event.key==='Enter'){setF('kw',this.value)}">
+      <button class="btn" onclick="setF('kw',document.querySelector('.filters input').value)">搜索</button>
+      ${(LIST.cat||LIST.kw||LIST.status)?`<a class="btn" href="#/news" onclick="LIST={status:'',cat:'',kw:'',page:1,size:8}">清除筛选</a>`:''}
+    </div>
+    <div class="bulk ${SEL.size?'on':''}">
+      <span>已选 <b>${SEL.size}</b> 项</span>
+      <button onclick="bulkDo('published')">批量发布</button>
+      <button onclick="bulkDo('offline')">批量下架</button>
+      <button onclick="bulkDo('review')">批量转待审</button>
+      <button class="del" onclick="bulkDo('del')">批量删除</button>
+      <a onclick="selClear()">取消选择</a>
+    </div>
+    ${rows.length? `<table>
+      <thead><tr><th style="width:38px;"><input type="checkbox" onclick="selAll(this.checked)" ${rows.length&&rows.every(n=>SEL.has(n.id))?'checked':''}></th><th style="width:52px;">#</th><th>标题</th><th style="width:110px;">栏目</th>
+        <th style="width:88px;">状态</th><th style="width:74px;">浏览</th>
+        <th style="width:110px;">日期</th><th style="width:212px;">操作</th></tr></thead>
+      <tbody>${rows.map(n=>`<tr class="${SEL.has(n.id)?'sel':''}">
+        <td><input type="checkbox" ${SEL.has(n.id)?'checked':''} onclick="selOne(${n.id},this.checked)"></td>
+        <td style="color:#a9b6c3;">${n.id}</td>
+        <td><div class="ti-cell">${n.cover?`<img class="ti-thumb" src="${n.cover}" alt="">`:`<span class="ti-thumb ph">无图</span>`}<a class="ti" href="#/edit/${n.id}">${esc(n.title)}</a></div></td>
+        <td>${n.cat}</td>
+        <td><span class="st ${STATUS_MAP[n.status].cls}">${STATUS_MAP[n.status].t}</span></td>
+        <td>${n.views||0}</td>
+        <td>${n.date}</td>
+        <td class="ops">
+          <a href="#/edit/${n.id}">编辑</a>
+          ${n.status!=='published'?`<a onclick="publish(${n.id})">发布</a>`:`<a onclick="offline(${n.id})">下架</a>`}
+          <a onclick="topIt(${n.id})">${n.top?'取消置顶':'置顶'}</a>
+          <a class="del" onclick="del(${n.id})">删除</a>
+        </td></tr>`).join('')}</tbody></table>
+      <div class="pgx"><div>共 ${total} 条，第 ${LIST.page} / ${pages} 页</div>
+        <div class="pgs">
+          ${Array.from({length:pages},(_,i)=>`<a class="${LIST.page===i+1?'on':''}" onclick="goPage(${i+1})">${i+1}</a>`).join('')}
+        </div></div>`
+      : `<div class="empty">没有符合条件的文章，试试调整筛选条件</div>`}
+  </div>`;
+
+  return shell('news','文章管理',
+    '新增、编辑、发布与下架校园新闻、公告及系部动态',
+    body, `<a class="btn" href="#/cats">栏目管理</a><a class="btn pri" href="#/new">＋ 新建文章</a>`);
+}
+function setF(k,v){ LIST[k]=v; LIST.page=1; SEL.clear(); render(); }
+function goPage(p){ LIST.page=p; render(); renderSel(); }
+function selOne(id,on){ on?SEL.add(id):SEL.delete(id); renderSel(); }
+function selAll(on){
+  const arr = filterNews().slice((LIST.page-1)*LIST.size, LIST.page*LIST.size);
+  arr.forEach(n=> on?SEL.add(n.id):SEL.delete(n.id));
+  render();
+}
+function selClear(){ SEL.clear(); render(); }
+function renderSel(){
+  const bar = document.querySelector('.bulk');
+  if(bar) bar.classList.toggle('on', SEL.size>0);
+  const c = bar && bar.querySelector('b');
+  if(c) c.textContent = SEL.size;
+  document.querySelectorAll('table tbody tr').forEach((tr,i)=>{
+    const ck = tr.querySelector('input[type=checkbox]');
+    if(ck) tr.classList.toggle('sel', ck.checked);
+  });
+}
+function bulkDo(act){
+  const ids = [...SEL];
+  if(!ids.length) return;
+  if(act==='del' && !confirm(`确定删除选中的 ${ids.length} 篇文章吗？`)) return;
+  ids.forEach(id=>{
+    const n = Store.get(id);
+    if(!n) return;
+    if(act==='del'){ Store.addLog('删除文章', n.title); Store.remove(id); }
+    else { Store.setStatus(id, act); Store.addLog(act==='published'?'发布文章':act==='offline'?'下架文章':'提交审核', n.title); }
+  });
+  SEL.clear();
+  toast(act==='del' ? `已删除 ${ids.length} 篇` : `已处理 ${ids.length} 篇`);
+  render();
+}
+function publish(id){ Store.setStatus(id,'published'); Store.addLog('发布文章', Store.get(id).title); toast('已发布，前台同步可见'); render(); }
+function offline(id){ Store.setStatus(id,'offline'); Store.addLog('下架文章', Store.get(id).title); toast('已下架'); render(); }
+function topIt(id){ Store.toggleTop(id); toast(Store.get(id).top?'已置顶':'已取消置顶'); render(); }
+function del(id){
+  if(!confirm('确定删除这篇文章吗？删除后前台将不再显示。')) return;
+  Store.addLog('删除文章', Store.get(id).title); Store.remove(id); toast('已删除'); render();
+}
+
+/* ================= 编辑页 ================= */
+function pgEdit(id){
+  const isNew = !id;
+  const n = isNew ? {id:'', title:'', cat:'校园新闻', dept:'信息工程系', date:'2026-11-12',
+    status:'draft', top:false, desc:'', cover:'', body:['']} : Store.get(id);
+  if(!n) return shell('news','文章管理','文章不存在','<div class="empty">文章不存在</div>');
+
+  const body = `
+  <form onsubmit="saveArticle(event, '${id||''}')">
+    <div class="formgrid">
+      <div>
+        <div class="cardbox">
+          <div class="fg"><label>标题<i>*</i></label>
+            <input type="text" id="f-title" value="${esc(n.title)}" placeholder="请输入文章标题" required></div>
+          <div class="fg"><label>摘要</label>
+            <textarea id="f-desc" style="min-height:80px;" placeholder="用于列表页与搜索结果展示，建议 60–120 字">${esc(n.desc)}</textarea></div>
+          <div class="fg"><label>正文</label>
+            <textarea id="f-body" style="min-height:280px;" placeholder="在此输入正文，段落之间空一行">${esc((n.body||[]).join('\n\n'))}</textarea>
+            <div class="hint" style="display:flex;justify-content:space-between;gap:14px;">
+              <span>段落之间空一行即为分段；演示版为纯文本编辑，正式版可接富文本编辑器。</span>
+              <span id="wc" style="white-space:nowrap;color:#8fa3b6;">0 字</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="side-card">
+          <h4>发布设置</h4>
+          <div class="fg"><label>所属栏目</label>
+            <select id="f-cat">${Store.cats().map(c=>`<option ${n.cat===c.name?'selected':''}>${c.name}</option>`).join('')}</select></div>
+          <div class="fg"><label>来源部门</label>
+            <select id="f-dept">${['信息工程系','教学管理处','学生工作处','招生就业处','能源材料系','机械与汽车工程系','经济贸易系','智能控制系','校长办公室']
+              .map(d=>`<option ${n.dept===d?'selected':''}>${d}</option>`).join('')}</select></div>
+          <div class="fg"><label>发布日期</label>
+            <input type="text" id="f-date" value="${n.date}" placeholder="2026-11-12"></div>
+          <div class="fg"><label>状态</label>
+            <div class="radios">
+              ${[['draft','草稿'],['review','提交审核'],['published','立即发布']].map(([v,t])=>
+                `<label><input type="radio" name="st" value="${v}" ${n.status===v?'checked':''}>${t}</label>`).join('')}
+            </div></div>
+          <div class="fg" style="margin-bottom:0;">
+            <label style="font-weight:400;"><input type="checkbox" id="f-top" ${n.top?'checked':''}> 置顶到首页公告区</label>
+          </div>
+        </div>
+        <div class="side-card">
+          <h4>封面图</h4>
+          <input type="file" id="f-file" accept="image/*" hidden onchange="pickCover(this)">
+          <input type="hidden" id="f-cover" value="${n.cover||''}">
+          <div class="up-preview" id="upPreview" style="${n.cover?'':'display:none'}">
+            <img id="upImg" alt="封面预览" src="${n.cover||''}">
+            <button type="button" class="up-del" onclick="clearCover()" title="移除封面">×</button>
+          </div>
+          <div class="upload" id="upDrop" onclick="document.getElementById('f-file').click()"
+               ondragover="event.preventDefault();this.classList.add('on')"
+               ondragleave="this.classList.remove('on')"
+               ondrop="event.preventDefault();this.classList.remove('on');if(event.dataTransfer.files[0])handleCoverFile(event.dataTransfer.files[0])">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                 stroke-linecap="round" stroke-linejoin="round" style="opacity:.75;">
+              <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/>
+              <path d="M21 15l-5-5L5 20"/></svg>
+            <div>点击或拖拽上传封面（建议 16:9，≥1200×675）</div>
+            <div style="font-size:11.5px;color:#a7b6c5;margin-top:2px;">JPG / PNG，自动压缩至宽 1280px</div>
+          </div>
+        </div>
+        ${!isNew?`<div class="side-card">
+          <h4>文章信息</h4>
+          <div class="meta-row"><span>文章 ID</span><span>${n.id}</span></div>
+          <div class="meta-row"><span>浏览量</span><span>${n.views||0}</span></div>
+          <div class="meta-row"><span>当前状态</span><span>${STATUS_MAP[n.status].t}</span></div>
+        </div>`:''}
+        <div style="display:flex;gap:9px;">
+          <button class="btn pri" type="submit" style="flex:1;padding:11px;">保存</button>
+          <a class="btn" href="#/news" style="padding:11px 18px;">取消</a>
+        </div>
+      </div>
+    </div>
+  </form>`;
+
+  return shell('news', isNew?'新建文章':'编辑文章',
+    isNew?'填写内容后保存，前台将按所选状态决定是否展示':'修改后保存，已发布文章将即时更新到前台',
+    body, `<a class="btn" href="index.html" target="_blank">前台预览</a>`);
+}
+
+function pickCover(input){
+  const f = input && input.files && input.files[0];
+  if(f) handleCoverFile(f);
+  if(input) input.value = '';
+}
+
+/* 通用：读取图片 → 等比压缩到宽 1280 → dataURL */
+function compressImage(file, cb){
+  if(!file) return;
+  if(!/^image\//.test(file.type)){ cb(null, '请选择图片文件（JPG / PNG）'); return; }
+  if(file.size > 12 * 1024 * 1024){ cb(null, '图片过大，请控制在 12MB 以内'); return; }
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const sc = Math.min(1, 1280 / img.width);
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * sc);
+      c.height = Math.round(img.height * sc);
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      let data;
+      try { data = c.toDataURL('image/jpeg', 0.82); } catch(e){ data = fr.result; }
+      cb(data, null, { w: c.width, h: c.height });
+    };
+    img.onerror = ()=>cb(null, '图片读取失败，请换一张试试');
+    img.src = fr.result;
+  };
+  fr.onerror = ()=>cb(null, '文件读取失败');
+  fr.readAsDataURL(file);
+}
+
+/* 读取本地图片 → 压缩到宽 1280 → dataURL 存入隐藏域（演示版用 localStorage 持久化） */
+function handleCoverFile(file){
+  compressImage(file, (data, err)=>{
+    if(err){ toast(err); return; }
+    const hidden = document.getElementById('f-cover');
+    const prev = document.getElementById('upPreview');
+    const im = document.getElementById('upImg');
+    if(hidden) hidden.value = data;
+    if(im) im.src = data;
+    if(prev) prev.style.display = '';
+    toast('封面已就绪，保存后前台立即可见');
+  });
+}
+
+function clearCover(){
+  const hidden = document.getElementById('f-cover');
+  const prev = document.getElementById('upPreview');
+  const im = document.getElementById('upImg');
+  if(hidden) hidden.value = '';
+  if(im) im.src = '';
+  if(prev) prev.style.display = 'none';
+  toast('已移除封面，保存后生效');
+}
+
+function saveArticle(e, id){
+  e.preventDefault();
+  const title = document.getElementById('f-title').value.trim();
+  if(!title){ toast('请填写标题'); return; }
+  const body = document.getElementById('f-body').value.split(/\n\s*\n/).filter(x=>x.trim());
+  const stEl = document.querySelector('input[name=st]:checked');
+  const idNum = id ? +id : '';
+  Store.upsert({
+    id: idNum,
+    title, cat: document.getElementById('f-cat').value,
+    dept: document.getElementById('f-dept').value,
+    date: document.getElementById('f-date').value || '2026-11-12',
+    status: stEl ? stEl.value : 'draft',
+    top: document.getElementById('f-top').checked,
+    desc: document.getElementById('f-desc').value.trim(),
+    cover: (document.getElementById('f-cover') || {}).value || '',
+    body: body.length?body:['（暂无正文）']
+  });
+  Store.addLog(id?'编辑文章':'新建文章', title);
+  toast(id?'已保存':'已创建并保存');
+  setTimeout(()=>{ location.hash='#/news'; }, 500);
+}
+
+/* ================= 栏目 ================= */
+function pgCats(){
+  const cats = Store.cats();
+  const groups = [...new Set(cats.map(c=>c.parent))];
+  const body = `
+  <div class="row a">
+    <div class="panel">
+      <div class="hd"><div class="t">栏目结构<i>一级 / 二级</i></div></div>
+      <div class="bd">
+        ${groups.map(g=>`
+          <div style="margin-bottom:16px;">
+            <div style="font-size:13.5px;font-weight:700;color:var(--blue-d);padding:8px 0;border-bottom:1px solid #eef2f6;letter-spacing:.5px;">${g}</div>
+            ${cats.filter(c=>c.parent===g).map(c=>{
+              const n = Store.newsAll().filter(x=>x.cat===c.name).length;
+              return `<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0 9px 16px;border-bottom:1px dotted #f1f4f8;font-size:13px;">
+                <span><span style="color:#c6d0da;margin-right:8px;">└</span>${c.name}</span>
+                <span style="color:var(--ink3);font-size:12px;">${n} 篇
+                  <a style="color:var(--red);margin-left:12px;font-size:12px;" onclick="delCat('${c.id}','${c.name}')">删除</a></span>
+              </div>`;
+            }).join('')}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="hd"><div class="t">新增栏目</div></div>
+      <div class="bd">
+        <div class="fg"><label>栏目名称</label><input type="text" id="c-name" placeholder="如：媒体聚焦"></div>
+        <div class="fg"><label>上级栏目</label>
+          <select id="c-parent">${groups.map(g=>`<option>${g}</option>`).join('')}<option>其他</option></select></div>
+        <button class="btn pri" style="width:100%;padding:10px;" onclick="addCat()">＋ 添加栏目</button>
+        <div style="margin-top:16px;font-size:12px;color:var(--ink3);line-height:1.9;border-top:1px dashed #eef2f6;padding-top:14px;">
+          提示：栏目与前台主导航、左侧子导航联动。正式版支持排序拖拽、栏目模板选择、权限绑定。
+        </div>
+      </div>
+    </div>
+  </div>`;
+  return shell('cats','栏目管理','维护门户的信息架构，栏目变更会同步到前台导航', body);
+}
+function addCat(){
+  const name = document.getElementById('c-name').value.trim();
+  if(!name){ toast('请输入栏目名称'); return; }
+  const parent = document.getElementById('c-parent').value;
+  Store.addCat(name, parent); Store.addLog('新增栏目', parent+' / '+name);
+  toast('已添加栏目'); render();
+}
+function delCat(id, name){
+  if(!confirm(`确定删除栏目「${name}」吗？`)) return;
+  Store.removeCat(id); Store.addLog('删除栏目', name); toast('已删除'); render();
+}
+
+/* ================= 留言 ================= */
+function pgMsgs(){
+  const msgs = Store.messages();
+  const body = msgs.map(m=>`
+    <div class="msg">
+      <div class="av">${m.name.slice(0,1)}</div>
+      <div class="bd">
+        <div class="hd"><b>${esc(m.name)}</b><span>${m.phone}</span><span>${m.time}</span>
+          <span class="st ${m.status==='unread'?'wait':'ok'}" style="margin-left:auto;">${m.status==='unread'?'未回复':'已回复'}</span></div>
+        <div class="tx">${esc(m.content)}</div>
+        ${m.status==='unread'?`<div style="margin-top:10px;"><button class="btn" onclick="replyMsg(${m.id})">回复</button></div>`
+          :`<div class="rp"><b style="color:var(--blue);">管理员回复：</b>您好，感谢关注。相关招生政策将于近期在我校官网招生就业栏目发布，请留意查看。</div>`}
+      </div>
+    </div>`).join('');
+  return shell('msgs','留言管理','处理家长与学生的咨询留言、校长信箱来信', body||'<div class="empty">暂无留言</div>');
+}
+function replyMsg(id){ Store.replyMsg(id); toast('已标记为已回复'); render(); }
+
+/* ================= 用户 ================= */
+function pgUsers(){
+  const body = `<div class="panel"><div class="hd"><div class="t">后台用户<i>${Store.users().length} 个账号</i></div>
+    <button class="btn pri" onclick="toast('演示版未开放账号创建')">＋ 新增用户</button></div>
+    <table><thead><tr><th>姓名</th><th>登录账号</th><th>角色</th><th>所属部门</th><th>最近登录</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>${Store.users().map(u=>`<tr>
+      <td><b style="color:var(--ink);">${u.name}</b></td><td>${u.acct}</td>
+      <td><span class="st ${u.role==='超级管理员'?'top':'ok'}">${u.role}</span></td>
+      <td>${u.dept}</td><td>${u.last}</td>
+      <td>${u.status==='on'?'<span style="color:var(--green);">正常</span>':'<span style="color:var(--ink3);">停用</span>'}</td>
+      <td class="ops"><a onclick="toast('演示版未开放权限编辑')">编辑</a><a class="del" onclick="toast('演示版未开放密码重置')">重置密码</a></td>
+    </tr>`).join('')}</tbody></table></div>
+
+    <div class="row a" style="margin-top:14px;">
+      <div class="panel"><div class="hd"><div class="t">角色权限说明</div></div><div class="bd">
+        <ul class="rank">
+          <li><span class="n">1</span><span class="tx">超级管理员：全栏目读写、用户管理、系统设置</span><span class="vv">全部</span></li>
+          <li><span class="n">2</span><span class="tx">内容编辑：所辖栏目增删改、提交审核</span><span class="vv">本部门</span></li>
+          <li><span class="n">3</span><span class="tx">通讯员：仅可提交稿件，不可发布</span><span class="vv">投稿</span></li>
+          <li><span class="n">4</span><span class="tx">审核员：审核、退回、置顶、下架</span><span class="vv">审核</span></li>
+        </ul>
+      </div></div>
+      <div class="panel"><div class="hd"><div class="t">权限模型</div></div><div class="bd" style="font-size:12.5px;color:var(--ink3);line-height:2;">
+        采用 <b style="color:var(--ink);">RBAC</b>（基于角色的访问控制）：<br>
+        用户 → 角色 → 权限 → 栏目范围<br>
+        权限粒度：查看 / 新增 / 编辑 / 删除 / 审核 / 发布。
+      </div></div>
+    </div>`;
+  return shell('users','用户与角色','管理后台账号、角色与数据权限', body);
+}
+
+/* ================= 日志 ================= */
+function pgLogs(){
+  const body = `<div class="panel"><div class="hd"><div class="t">操作日志<i>最近 ${Store.logs().length} 条</i></div>
+    <button class="btn" onclick="Store.reset();toast('演示数据已重置');render();">重置演示数据</button></div>
+    <table><thead><tr><th style="width:170px;">时间</th><th style="width:140px;">操作人</th>
+      <th style="width:110px;">动作</th><th>对象</th><th style="width:130px;">IP</th></tr></thead>
+    <tbody>${Store.logs().map(l=>`<tr><td>${l.time}</td><td>${l.user}</td>
+      <td><span class="st ok">${l.act}</span></td><td>${esc(l.target)}</td><td>${l.ip}</td></tr>`).join('')}</tbody></table></div>`;
+  return shell('logs','操作日志','记录后台关键操作，便于追溯与安全审计', body);
+}
+
+/* ================= 设置 ================= */
+function pgSettings(){
+  const body = `<div class="formgrid">
+    <div class="cardbox">
+      <div class="fg"><label>站点名称</label><input type="text" value="张家港市中等专业学校"></div>
+      <div class="fg"><label>站点副标题</label><input type="text" value="德技双馨 · 行胜于言　|　国家级重点职业学校 · 江苏省领航学校"></div>
+      <div class="fg"><label>联系地址</label><input type="text" value="江苏省张家港市福新路 2 号"></div>
+      <div class="fg"><label>联系电话 / 邮箱</label><input type="text" value="0512-5866 xxxx　zjgzdzyxx@163.com"></div>
+      <div class="fg"><label>备案信息</label><input type="text" value="苏 ICP 备 10212518 号　苏公网安备 32058202010485 号"></div>
+      <div class="fg" style="margin-bottom:0;"><label>首页头条数量</label>
+        <select style="width:220px;"><option>5 条</option><option>6 条</option><option>8 条</option></select></div>
+    </div>
+    <div>
+      <div class="side-card"><h4>功能开关</h4>
+        <div class="fg"><label style="font-weight:400;"><input type="checkbox" checked> 开启无障碍浏览</label></div>
+        <div class="fg"><label style="font-weight:400;"><input type="checkbox" checked> 开启文章评论审核</label></div>
+        <div class="fg"><label style="font-weight:400;"><input type="checkbox"> 开启访问统计上报</label></div>
+        <div class="fg" style="margin-bottom:0;"><label style="font-weight:400;"><input type="checkbox" checked> 敏感词自动过滤</label></div>
+      </div>
+      <button class="btn pri" style="width:100%;padding:11px;" onclick="toast('设置已保存（演示）')">保存设置</button>
+      <div class="side-card" style="margin-top:16px;"><h4>数据备份</h4>
+        <p style="font-size:12px;color:var(--ink3);line-height:1.8;margin:0 0 12px;">
+          演示数据保存在本机浏览器中，换电脑或清理缓存后会丢失，答辩前建议导出一份备份。</p>
+        <button class="btn" style="width:100%;margin-bottom:10px;" onclick="exportData()">导出备份（.json）</button>
+        <button class="btn" style="width:100%;" onclick="document.getElementById('imp-file').click()">导入备份</button>
+        <input type="file" id="imp-file" accept=".json,application/json" hidden onchange="importData(this)">
+        <div style="font-size:11.5px;color:#a9b6c3;margin-top:10px;line-height:1.7;">
+          当前数据约 ${Math.max(1, Math.round(Store.exportAll().length / 1024))} KB</div>
+      </div>
+    </div>
+  </div>`;
+  return shell('settings','系统设置','站点基础信息与功能开关', body);
+}
+
+function exportData(){
+  const txt = Store.exportAll();
+  const b = new Blob([txt], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = 'zjg-portal-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  toast('备份已导出');
+}
+
+function importData(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      Store.importAll(String(fr.result));
+      toast('导入成功，数据已恢复');
+      render();
+    } catch (e) {
+      toast('导入失败：文件格式不正确');
+    }
+  };
+  fr.readAsText(f);
+  input.value = '';
+}
+
+/* ================= 图片素材库 ================= */
+function pgMedia(){
+  const list = Store.media();
+  const usage = Store.mediaUsage();
+  const kb = d => Math.max(1, Math.round((d || '').length * 0.75 / 1024)) + ' KB';
+  const body = `
+  <div class="panel">
+    <div class="hd"><div class="t">图片素材库<i>共 ${list.length} 张</i></div>
+      <div class="seg"><span class="on">全部图片</span></div>
+    </div>
+    <div class="filters">
+      <button class="btn pri" onclick="document.getElementById('m-file').click()">＋ 上传图片</button>
+      <input type="file" id="m-file" accept="image/*" multiple hidden onchange="uploadMedia(this)">
+      <span style="font-size:12.5px;color:#93a6b8;">可多选；自动压缩至宽 1280px 后存在浏览器本地（演示版）</span>
+    </div>
+    ${list.length ? `<div class="mgrid">${list.map(m => `
+      <div class="mcard">
+        <img src="${m.data}" alt="${esc(m.name)}" onclick="previewImg('${m.id}')">
+        <div class="meta">
+          <b title="${esc(m.name)}">${esc(m.name)}</b>
+          <span>${kb(m.data)} · ${m.time}${usage[m.data] ? ` · 已被 ${usage[m.data]} 篇文章使用` : ''}</span>
+        </div>
+        <div class="mops">
+          <a onclick="copyName('${esc(m.name)}')">复制名称</a>
+          <a class="del" onclick="delMedia('${m.id}')">删除</a>
+        </div>
+      </div>`).join('')}</div>`
+      : `<div class="empty">素材库还是空的，点击左上角「上传图片」添加第一张<br>
+          <span style="font-size:12px;color:#a9b6c3;">上传后的图片在新建文章时可直接用作封面</span></div>`}
+  </div>`;
+  return shell('media', '图片素材库', '统一存放新闻封面与栏目配图，可重复使用', body,
+    `<a class="btn" href="#/news">去文章管理</a>`);
+}
+
+function uploadMedia(input){
+  const files = Array.from(input.files || []);
+  if(!files.length) return;
+  let ok = 0, fail = 0;
+  files.reduce((p, f) => p.then(() => new Promise(res => {
+    compressImage(f, (data, err) => {
+      if(err || !data){ fail++; res(); return; }
+      const m = Store.addMedia(f.name.replace(/\.[^.]+$/, ''), data, data.length);
+      if(m) ok++; else fail++;
+      res();
+    });
+  })), Promise.resolve()).then(() => {
+    input.value = '';
+    toast(fail ? `已上传 ${ok} 张，${fail} 张失败（可能超出本地存储空间）` : `已上传 ${ok} 张图片`);
+    render();
+  });
+}
+
+function delMedia(id){
+  if(!confirm('确定删除这张素材吗？已使用该封面的文章不受影响。')) return;
+  Store.removeMedia(id); toast('已删除'); render();
+}
+
+function previewImg(id){
+  const m = Store.media().find(x => x.id === id);
+  if(!m) return;
+  const d = document.createElement('div');
+  d.className = 'lbox';
+  d.onclick = () => d.remove();
+  d.innerHTML = `<img src="${m.data}" alt="${esc(m.name)}">`;
+  document.body.appendChild(d);
+}
+
+function copyName(name){
+  try {
+    navigator.clipboard.writeText(name);
+    toast('已复制名称：' + name);
+  } catch(e){ toast('名称：' + name); }
+}
+
+/* ================= 轮播与公告 ================= */
+function pgSlides(){
+  const list = Store.slides();
+  const on = list.filter(s => s.on).length;
+  const body = `
+  <div class="panel">
+    <div class="hd"><div class="t">首页轮播图<i>共 ${list.length} 张 · 启用 ${on} 张</i></div>
+      <div class="seg"><span class="on">按顺序播放</span></div>
+    </div>
+    <div class="filters">
+      <button class="btn pri" onclick="document.getElementById('s-file').click()">＋ 上传轮播图</button>
+      <input type="file" id="s-file" accept="image/*" multiple hidden onchange="uploadSlide(this)">
+      <span style="font-size:12.5px;color:#93a6b8;">建议 1920×900 以上横图；启用中的第一张会作为首页大图</span>
+    </div>
+    ${list.length ? `<div class="sgrid">${list.map((s, i) => `
+      <div class="scard ${s.on ? '' : 'off'}">
+        <div class="im" style="background-image:url('${s.data}')" onclick="previewImgData('${s.data}','${esc(s.name)}')"></div>
+        <div class="tx">
+          <b title="${esc(s.name)}">${esc(s.name)}<span class="tag ${s.on ? 'on' : 'off'}">${s.on ? '启用' : '停用'}</span></b>
+          <div class="ops">
+            <a onclick="toggleSlide('${s.id}')">${s.on ? '停用' : '启用'}</a>
+            ${i > 0 ? `<a onclick="moveSlide('${s.id}',-1)">上移</a>` : ''}
+            ${i < list.length - 1 ? `<a onclick="moveSlide('${s.id}',1)">下移</a>` : ''}
+            <a class="del" onclick="delSlide('${s.id}')">删除</a>
+          </div>
+        </div>
+      </div>`).join('')}</div>`
+      : `<div class="empty">还没有轮播图，点击「上传轮播图」添加<br>
+          <span style="font-size:12px;color:#a9b6c3;">未上传时首页使用默认校园全景图</span></div>`}
+    <div class="pgx"><div>排序越靠前越优先在首页展示，只显示第一张启用的图</div>
+      <div class="pgs"><a class="btn" href="index.html" target="_blank">到首页查看效果</a></div></div>
+  </div>`;
+  return shell('slides', '轮播与公告', '维护首页大图与公告展示顺序', body);
+}
+
+function uploadSlide(input){
+  const files = Array.from(input.files || []);
+  if(!files.length) return;
+  let ok = 0, fail = 0;
+  files.reduce((p, f) => p.then(() => new Promise(res => {
+    compressImage(f, (data, err) => {
+      if(err || !data){ fail++; res(); return; }
+      const s = Store.addSlide(f.name.replace(/\.[^.]+$/, ''), data);
+      if(s) ok++; else fail++;
+      res();
+    });
+  })), Promise.resolve()).then(() => {
+    input.value = '';
+    toast(fail ? `已上传 ${ok} 张，${fail} 张失败（可能超出本地存储空间）` : `已上传 ${ok} 张轮播图`);
+    render();
+  });
+}
+
+function toggleSlide(id){ Store.toggleSlide(id); render(); }
+function moveSlide(id, d){ Store.moveSlide(id, d); render(); }
+function delSlide(id){
+  if(!confirm('确定删除这张轮播图吗？')) return;
+  Store.removeSlide(id); toast('已删除'); render();
+}
+function previewImgData(data, name){
+  const d = document.createElement('div');
+  d.className = 'lbox';
+  d.onclick = () => d.remove();
+  d.innerHTML = `<img src="${data}" alt="${name}">`;
+  document.body.appendChild(d);
+}
+
+/* ================= 占位 ================= */
+function pgTodo(title, sub, active){
+  const body = `<div class="panel"><div class="empty">
+    「${title}」模块将在正式版实现<br>
+    <span style="font-size:12px;color:#a9b6c3;">本次 Demo 重点演示：工作台 · 文章管理（增删改查、发布上下架）· 栏目管理 · 留言 · 用户 · 日志</span>
+  </div></div>`;
+  return shell(active, title, sub, body);
+}
+
+/* ================= 路由 ================= */
+function render(){
+  const h = location.hash.replace(/^#\/?/,'') || (SESSION?'dash':'login');
+  const [k, arg] = h.split('/');
+
+  if(k === 'logout'){
+    SESSION = false;
+    try { sessionStorage.removeItem('zjg_login'); } catch(e){}
+    location.hash = '#/login'; return;
+  }
+  if(!SESSION && k !== 'login'){ location.hash = '#/login'; return; }
+
+  let html='';
+  switch(k){
+    case 'login': html = pgLogin(); break;
+    case 'dash': html = pgDash(); break;
+    case 'news': html = pgNews(); break;
+    case 'new': html = pgEdit(null); break;
+    case 'edit': html = pgEdit(arg); break;
+    case 'cats': html = pgCats(); break;
+    case 'msgs': html = pgMsgs(); break;
+    case 'users': html = pgUsers(); break;
+    case 'logs': html = pgLogs(); break;
+    case 'settings': html = pgSettings(); break;
+    case 'media': html = pgMedia(); break;
+    case 'slides': html = pgSlides(); break;
+    default: html = SESSION?pgDash():pgLogin();
+  }
+  app.innerHTML = html;
+  window.scrollTo(0,0);
+  initEditor();
+}
+
+let EDIT_KEY = null;
+function initEditor(){
+  document.removeEventListener('keydown', onSaveKey);
+  const body = document.getElementById('f-body');
+  if(!body) return;
+  const wc = document.getElementById('wc');
+  const upd = () => {
+    const t = body.value.replace(/\s/g, '').length;
+    const d = document.getElementById('f-desc');
+    const sum = t + (d ? d.value.replace(/\s/g, '').length : 0);
+    if(wc) wc.textContent = sum + ' 字';
+  };
+  body.addEventListener('input', upd);
+  const desc = document.getElementById('f-desc');
+  if(desc) desc.addEventListener('input', upd);
+  upd();
+  document.addEventListener('keydown', onSaveKey);
+}
+function onSaveKey(e){
+  if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')){
+    e.preventDefault();
+    const f = document.querySelector('form');
+    if(f) f.dispatchEvent(new Event('submit', { cancelable: true }));
+  }
+}
+window.addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>
