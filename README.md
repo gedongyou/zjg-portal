@@ -5,8 +5,9 @@
 
 纯静态站点，原生 HTML + CSS + JavaScript 实现，无需构建、无需后端，可直接部署到 GitHub Pages。
 
-在线预览：`https://<你的用户名>.github.io/<仓库名>/`
-后台入口：`https://<你的用户名>.github.io/<仓库名>/admin.html`（账号 `admin`，密码 `123456`）
+- 在线预览：https://gedongyou.github.io/zjg-portal/
+- 后台入口：https://gedongyou.github.io/zjg-portal/admin.html （账号 `admin`，密码 `123456`）
+- 仓库地址：https://github.com/gedongyou/zjg-portal
 
 ---
 
