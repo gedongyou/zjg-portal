@@ -127,7 +127,8 @@
   .news .col{padding:6px 18px 12px;}
   .news .col:first-child{border-right:1px dashed var(--line);}
   .tabs{display:flex;gap:6px;padding:12px 0 6px;}
-  .tabs .tab{font-size:13.5px;padding:6px 13px;color:var(--ink-2);border-radius:2px;cursor:pointer;}
+  .tabs .tab{font-size:13.5px;padding:6px 13px;color:var(--ink-2);border-radius:2px;cursor:pointer;
+    text-decoration:none;display:inline-block;transition:.2s;}
   .tabs .tab.on{background:#eaf2fa;color:var(--blue-deep);font-weight:700;}
   .newslist{list-style:none;margin:0;padding:0;}
   .newslist li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px dotted #e8ecf1;font-size:14px;}
@@ -1083,16 +1084,22 @@ function sideNav(title, groups, active, page, tip){
    页面
    ============================================================ */
 function pgHome(){
+  const cats = catList();
   const pick = (cats, n) => {
     const hit = NEWS.filter(x=>cats.includes(x.cat));
     return (hit.length ? hit : NEWS).slice(0,n);
   };
-  const leftArr = pick(['校园新闻'],5);
+  const leftArr = pick([cats[0] || '校园新闻'],5);
   const used = new Set(leftArr.map(x=>x.id));
-  const rightArr = pick(['系部风采','部门新闻'],5).filter(x=>!used.has(x.id));
+  const rightArr = pick([cats[1] || '系部风采'],5).filter(x=>!used.has(x.id));
   NEWS.forEach(x=>{
     if(rightArr.length<5 && !used.has(x.id) && !rightArr.some(y=>y.id===x.id)) rightArr.push(x);
   });
+  const tabRow = (from, to) => {
+    const g = cats.slice(from, to);
+    if(!g.length) return '';
+    return `<div class="tabs">${g.map((c,i)=>`<a class="tab ${i===0?'on':''}" href="#/news/${encodeURIComponent(c)}">${c}</a>`).join('')}</div>`;
+  };
   const newsLi = leftArr.map(n=>`
     <li><div class="date"><b>${n.date}</b><span>${n.year}</span></div>
       <a class="txt" href="#/news/${n.id}">${n.title}${n.hot?'<span class="tag-hot">热门</span>':''}<i>${n.dept} · ${n.views} 次浏览</i></a></li>`).join('');
@@ -1132,11 +1139,11 @@ function pgHome(){
         <div class="card-hd"><div class="ttl">新闻中心</div><a class="more" href="#/news">更多 +</a></div>
         <div class="news">
           <div class="col">
-            <div class="tabs"><div class="tab on">校园新闻</div><div class="tab">部门动态</div></div>
+            ${tabRow(0,2)}
             <ul class="newslist">${newsLi}</ul>
           </div>
           <div class="col">
-            <div class="tabs"><div class="tab on">系部风采</div><div class="tab">媒体聚焦</div></div>
+            ${tabRow(2,4)}
             <ul class="newslist">${newsLi2}</ul>
           </div>
         </div>
@@ -1187,12 +1194,18 @@ function pgHome(){
   ` + footer();
 }
 
-const NEWS_CATS = ['校园新闻','校园公告','部门新闻','系部风采','学工动态','教学研究','招生信息','校园政策','教育新闻','法律常识'];
+function catList(){
+  const list = (Store.cats() || []).map(c=>c.name).filter(Boolean);
+  const extra = [];
+  NEWS.forEach(n=>{ if(n.cat && list.indexOf(n.cat)<0 && extra.indexOf(n.cat)<0) extra.push(n.cat); });
+  return list.concat(extra);
+}
 
 function newsNav(active){
+  const CATS = catList();
   const cnt = c => NEWS.filter(n=>n.cat===c).length;
   return sideNav('新闻中心',[
-    {h:'', items:[['全部新闻','all',NEWS.length]].concat(NEWS_CATS.map(c=>[c,c,cnt(c)]))},
+    {h:'', items:[['全部新闻','all',NEWS.length]].concat(CATS.map(c=>[c,c,cnt(c)]))},
     {h:'快速入口', items:[['招生信息','#/zs'],['专业设置','#/majors'],['进入后台','admin.html']]}
   ], active, 'news',
   '<b>投稿</b>：各部门信息员在后台提交，宣传部审核后发布<br><b>更新</b>：工作日每日更新');
@@ -1208,7 +1221,7 @@ function pgNewsList(cat, page){
   if(pg > pages) pg = pages;
   const list = all.slice((pg - 1) * PAGE, pg * PAGE);
   const title = c || '全部新闻';
-  const chips = ['', ...NEWS_CATS].map(x=>{
+  const chips = ['', ...catList()].map(x=>{
     const on = (x||'')===c;
     const lab = x || '全部';
     const href = x ? `#/news/${encodeURIComponent(x)}` : '#/news/all';
@@ -1245,7 +1258,7 @@ const HOT_KEYS = [['招生就业','#/zs'],['专业设置','#/majors'],['五心�
 function searchNav(q){
   return sideNav('站内搜索',[
     {h:'热门入口', items:HOT_KEYS},
-    {h:'按栏目浏览', items:NEWS_CATS.slice(0,6).map(c=>[c,'#/news/'+encodeURIComponent(c),NEWS.filter(n=>n.cat===c).length])}
+    {h:'按栏目浏览', items:catList().slice(0,6).map(c=>[c,'#/news/'+encodeURIComponent(c),NEWS.filter(n=>n.cat===c).length])}
   ], q, 'search', '<b>提示</b>：搜索范围为新闻标题、摘要、栏目与来源部门，也可直接在顶部搜索框输入关键词。');
 }
 function doSearch(){
@@ -1960,6 +1973,18 @@ function route(){
   route._key = k;
 }
 window.addEventListener('hashchange',route);
+
+window.addEventListener('storage',function(e){
+  if(!e.key || e.key.indexOf('zjg_portal') !== 0) return;
+  NEWS = loadNews();
+  route();
+});
+
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState !== 'visible') return;
+  const fresh = loadNews();
+  if(fresh.length !== NEWS.length){ NEWS = fresh; route(); }
+});
 
 document.addEventListener('click',function(e){
   const a = e.target.closest ? e.target.closest('.side-nav a') : null;

@@ -791,7 +791,7 @@ function pgCats(){
           <select id="c-parent">${groups.map(g=>`<option>${g}</option>`).join('')}<option>其他</option></select></div>
         <button class="btn pri" style="width:100%;padding:10px;" onclick="addCat()">＋ 添加栏目</button>
         <div style="margin-top:16px;font-size:12px;color:var(--ink3);line-height:1.9;border-top:1px dashed #eef2f6;padding-top:14px;">
-          提示：栏目与前台主导航、左侧子导航联动。正式版支持排序拖拽、栏目模板选择、权限绑定。
+          栏目改动会立即同步到前台：新闻中心的左侧栏目、分类胶囊、首页新闻分组都用这里的栏目。删除栏目不会删除文章，文章会变成「未归类」，可在文章管理里重新选择栏目。
         </div>
       </div>
     </div>
